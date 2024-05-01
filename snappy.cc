@@ -1467,8 +1467,11 @@ std::pair<const uint8_t*, ptrdiff_t> DecompressBranchless(
 
         // For copies we need to copy from op_base + delta, for literals
         // we need to copy from ip instead of from the stream.
+#pragma clang diagnostic push
+#pragma clang diagnostic warning "-Wcheri-capability-misuse"
         const void* from =
             tag_type ? reinterpret_cast<void*>(op_base + delta) : old_ip;
+#pragma clang diagnostic pop
         MemCopy64(op_base + op, deferred_src, deferred_length);
         op += deferred_length;
         DeferMemCopy(&deferred_src, &deferred_length, from, len);
